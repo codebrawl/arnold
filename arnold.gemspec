@@ -1,15 +1,14 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "arnold/version"
 
 Gem::Specification.new do |s|
   s.name        = "arnold"
-  s.version     = Arnold::VERSION
+  s.version     = 0.0.0
   s.authors     = ["Jeff Kreeftmeijer"]
   s.email       = ["jeff@kreeftmeijer.nl"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/codebrawl/arnold"
+  s.summary     = %q{A terminal admin interface}
+  s.description = %q{A terminal admin interface}
 
   s.rubyforge_project = "arnold"
 
