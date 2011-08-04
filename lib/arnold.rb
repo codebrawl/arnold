@@ -6,6 +6,11 @@ module Arnold
     YAML.load(change).each { |key, value| write_attribute(key, value) }
   end
 
+  def edit!
+    edit
+    save!
+  end
+
   private
 
     def change

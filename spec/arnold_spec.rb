@@ -22,6 +22,16 @@ shared_examples_for 'Arnold' do
 
   end
 
+  describe '#edit!' do
+
+    it "should update and save the object" do
+      subject.stubs(:change).returns({:name => 'Bob'}.to_yaml)
+      subject.expects(:edit)
+      subject.expects(:save!)
+    end
+
+  end
+
   describe '#tempfile' do
 
     it 'should store the yaml-ized object into a tempfile' do
