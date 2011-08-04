@@ -15,7 +15,7 @@ module Arnold
 
     def change
       path = tempfile
-      system "vi #{path}"
+      system [editor, path].join(' ')
       File.read(path)
     end
 
@@ -23,6 +23,10 @@ module Arnold
       tmp = Tempfile.new(id)
       File.open(tmp, 'w') { |file| file.write(attributes.to_yaml) }
       tmp.path
+    end
+
+    def editor
+      ENV['EDITOR'] || 'vi'
     end
 
 end

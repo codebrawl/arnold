@@ -41,6 +41,20 @@ shared_examples_for 'Arnold' do
 
   end
 
+  describe '#editor' do
+
+    it "should return vi by default" do
+      ENV.stubs(:[]).with('EDITOR').returns nil
+      subject.send(:editor).should == 'vi'
+    end
+
+    it "should return vi by default" do
+      ENV.stubs(:[]).with('EDITOR').returns 'mate'
+      subject.send(:editor).should == 'mate'
+    end
+
+  end
+
 end
 
 class MongoidDocument
