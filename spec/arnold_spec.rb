@@ -12,11 +12,11 @@ shared_examples_for 'Arnold' do
     subject.class.ancestors.should include Arnold
   end
 
-  describe '#edit' do
+  describe '#update' do
 
     it "should update the object's fields" do
       subject.stubs(:change).returns({:name => 'Bob'}.to_yaml)
-      subject.edit
+      subject.update
       subject.read_attribute(:name).should == 'Bob'
     end
 
