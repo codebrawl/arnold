@@ -2,7 +2,7 @@ require 'tempfile'
 
 module Arnold
 
-  def update
+  def edit
     YAML.load(change).each { |key, value| write_attribute(key, value) }
   end
 
