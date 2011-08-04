@@ -20,7 +20,7 @@ module Arnold
     end
 
     def tempfile
-      tmp = Tempfile.new(id)
+      tmp = Tempfile.new(id.to_s)
       File.open(tmp, 'w') { |file| file.write(attributes.to_yaml) }
       tmp.path
     end
