@@ -2,6 +2,10 @@ require 'mongoid'
 require 'mocha'
 require 'arnold'
 
+RSpec.configure do |config|
+  config.mock_with :mocha
+end
+
 shared_examples_for 'Arnold' do
 
   before do
@@ -28,6 +32,7 @@ shared_examples_for 'Arnold' do
       subject.stubs(:change).returns({:name => 'Bob'}.to_yaml)
       subject.expects(:edit)
       subject.expects(:save!)
+      subject.edit!
     end
 
   end
