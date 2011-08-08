@@ -26,9 +26,13 @@ module Arnold
     end
 
     def editor
-      ENV['EDITOR'] || 'vi'
+      editor = ENV['EDITOR'] || 'vi'
+      [editor, editor_extra_options[editor]].compact.join(' ')
     end
-
+    
+    def editor_extra_options
+      { "mate" => "-w", "subl" => "-w" }
+    end
 end
 
 Mongoid::Document.send(:include, Arnold)  if defined? Mongoid::Document

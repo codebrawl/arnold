@@ -46,8 +46,13 @@ shared_examples_for 'Arnold' do
     end
 
     it "should return vi by default" do
+      ENV.stubs(:[]).with('EDITOR').returns 'vi'
+      subject.send(:editor).should == 'vi'
+    end
+    
+    it "should switch to the blocking version of the editor" do
       ENV.stubs(:[]).with('EDITOR').returns 'mate'
-      subject.send(:editor).should == 'mate'
+      subject.send(:editor).should == 'mate -w'
     end
 
   end
