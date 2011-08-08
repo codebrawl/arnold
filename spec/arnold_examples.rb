@@ -1,12 +1,3 @@
-require 'mongoid'
-require 'active_record'
-require 'mocha'
-require 'arnold'
-
-RSpec.configure do |config|
-  config.mock_with :mocha
-end
-
 shared_examples_for 'Arnold' do
 
   before do
@@ -61,30 +52,4 @@ shared_examples_for 'Arnold' do
 
   end
 
-end
-
-class MongoidDocument
-  include Mongoid::Document
-end
-
-describe MongoidDocument do
-  it_should_behave_like 'Arnold'
-end
-
-ActiveRecord::Base.class_eval do
-  alias_method :save, :valid?
-  
-  def self.columns; @columns ||= []; end
-  
-  def self.column(name, sql_type = nil, default = nil, null = true)
-    columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type, null)
-  end
-end
-
-class ActiveRecordRow < ActiveRecord::Base
-  column :name
-end
-
-describe ActiveRecordRow do
-  it_should_behave_like 'Arnold'
 end
