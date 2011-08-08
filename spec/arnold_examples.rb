@@ -42,7 +42,7 @@ shared_examples_for 'Arnold' do
 
     it "should return vi by default" do
       ENV.stubs(:[]).with('EDITOR').returns nil
-      subject.send(:editor).should == 'vi'
+      subject.send(:editor).should == (Arnold::Utils.windows? ? 'notepad' : 'vi')
     end
 
     it "should return vi by default" do
