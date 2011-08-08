@@ -1,4 +1,5 @@
 require 'mongoid'
+require 'active_record'
 require 'mocha'
 require 'arnold'
 
@@ -9,7 +10,7 @@ end
 shared_examples_for 'Arnold' do
 
   before do
-    subject.write_attribute(:name, 'Arnold')
+    subject.send(:write_attribute, :name, 'Arnold')
   end
 
   it 'should have Arnold included automatically' do
@@ -67,5 +68,23 @@ class MongoidDocument
 end
 
 describe MongoidDocument do
+  it_should_behave_like 'Arnold'
+end
+
+ActiveRecord::Base.class_eval do
+  alias_method :save, :valid?
+  
+  def self.columns; @columns ||= []; end
+  
+  def self.column(name, sql_type = nil, default = nil, null = true)
+    columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type, null)
+  end
+end
+
+class ActiveRecordRow < ActiveRecord::Base
+  column :name
+end
+
+describe ActiveRecordRow do
   it_should_behave_like 'Arnold'
 end
