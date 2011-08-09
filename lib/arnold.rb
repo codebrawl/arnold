@@ -1,7 +1,13 @@
 require 'tempfile'
-require 'arnold/utils'
+require 'rbconfig'
 
 module Arnold
+
+  module Utils
+    def self.windows?
+      Config::CONFIG['host_os'] =~ /mswin|mingw/
+    end
+  end
 
   def edit
     YAML.load(change).each { |key, value| write_attribute(key, value) }

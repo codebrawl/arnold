@@ -40,9 +40,15 @@ shared_examples_for 'Arnold' do
 
   describe '#editor' do
 
+    it "should return notepad by default on windows" do
+      Arnold::Utils.stubs(:windows?).returns true
+      subject.send(:editor).should == 'notepad'
+    end
+
     it "should return vi by default" do
+      Arnold::Utils.stubs(:windows?).returns false
       ENV.stubs(:[]).with('EDITOR').returns nil
-      subject.send(:editor).should == (Arnold::Utils.windows? ? 'notepad' : 'vi')
+      subject.send(:editor).should == 'vi'
     end
 
     it "should return vi by default" do
