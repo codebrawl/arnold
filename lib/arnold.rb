@@ -1,13 +1,6 @@
 require 'tempfile'
 require 'rbconfig'
 
-class Array
-  def to_yaml_style
-    classes = map(&:class)
-    :inline unless classes.include?(Array) || classes.include?(Hash)
-  end
-end
-
 module Arnold
 
   module Utils
@@ -44,7 +37,7 @@ module Arnold
       editor = ENV['EDITOR'] || (Utils.windows? ? 'notepad' : 'vi')
       [editor, editor_extra_options[editor]].compact.join(' ')
     end
-
+    
     def editor_extra_options
       { "mate" => "-w", "subl" => "-w" }
     end
