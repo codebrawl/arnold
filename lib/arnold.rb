@@ -1,13 +1,6 @@
 require 'tempfile'
 require 'rbconfig'
 
-class Array
-  def to_yaml_style
-    classes = map(&:class)
-    :inline unless classes.include?(Array) || classes.include?(Hash)
-  end
-end
-
 module Arnold
 
   module Utils
@@ -50,5 +43,13 @@ module Arnold
     end
 end
 
+module InlineYAML
+  def to_yaml_style
+    classes = map(&:class)
+    :inline unless classes.include?(Array) || classes.include?(Hash)
+  end
+end
+
+Array.send :include, InlineYAML
 Mongoid::Document.send(:include, Arnold)  if defined? Mongoid::Document
 ActiveRecord::Base.send(:include, Arnold) if defined? ActiveRecord::Base
