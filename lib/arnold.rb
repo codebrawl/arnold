@@ -28,7 +28,7 @@ module Arnold
 
     def tempfile
       tmp = Tempfile.new(id.to_s)
-      File.open(tmp.path, 'w') { |file| file.write(attributes.to_yaml) }
+      File.open(tmp.path, 'w') { |file| file.write(editable_attributes.to_yaml) }
       tmp.close
       tmp.path
     end
@@ -40,6 +40,10 @@ module Arnold
     
     def editor_extra_options
       { "mate" => "-w", "subl" => "-w" }
+    end
+
+    def editable_attributes
+      attributes.delete_if{ |k, v| k == '_id' }
     end
 end
 
