@@ -9,6 +9,30 @@ module Arnold
     end
   end
 
+  class YAMLizer
+    def self.yamlize(data)
+      if defined? Psych
+        yaml = Psych::Visitors::YAMLTree.new {}
+        yaml << data
+        set_pysch_style(yaml.tree).to_yaml
+      else
+        data.to_yaml
+      end
+    end
+
+    def self.set_pysch_style(node)
+      children = node.children.select(&:children)
+
+      if children.empty?
+        node.style = Psych::Nodes::Sequence::FLOW if node.children.select(&:children).empty?
+      else
+        children.each {|child| set_pysch_style(child)}
+      end
+
+      node
+    end
+  end
+
   def edit
     YAML.load(change).each { |key, value| write_attribute(key, value) }
   end
@@ -28,7 +52,9 @@ module Arnold
 
     def tempfile
       tmp = Tempfile.new(id.to_s)
-      File.open(tmp.path, 'w') { |file| file.write(editable_attributes.to_yaml) }
+      File.open(tmp.path, 'w') do |file|
+        file.write YAMLizer.yamlize(editable_attributes)
+      end
       tmp.close
       tmp.path
     end
@@ -37,7 +63,7 @@ module Arnold
       editor = ENV['EDITOR'] || (Utils.windows? ? 'notepad' : 'vi')
       [editor, editor_extra_options[editor]].compact.join(' ')
     end
-    
+
     def editor_extra_options
       { "mate" => "-w", "subl" => "-w" }
     end

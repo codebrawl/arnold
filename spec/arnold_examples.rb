@@ -11,7 +11,7 @@ shared_examples_for 'Arnold' do
   describe '#edit' do
 
     it "should update the object's fields" do
-      subject.stubs(:change).returns({:name => 'Bob'}.to_yaml)
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize({:name => 'Bob'}))
       subject.edit
       subject.read_attribute(:name).should == 'Bob'
     end
@@ -21,7 +21,7 @@ shared_examples_for 'Arnold' do
   describe '#edit!' do
 
     it "should update and save the object" do
-      subject.stubs(:change).returns({:name => 'Bob'}.to_yaml)
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize({:name => 'Bob'}))
       subject.expects(:edit)
       subject.expects(:save!)
       subject.edit!
@@ -55,7 +55,7 @@ shared_examples_for 'Arnold' do
       ENV.stubs(:[]).with('EDITOR').returns 'vi'
       subject.send(:editor).should == 'vi'
     end
-    
+
     it "should switch to the blocking version of the editor" do
       ENV.stubs(:[]).with('EDITOR').returns 'mate'
       subject.send(:editor).should == 'mate -w'
