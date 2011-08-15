@@ -62,51 +62,24 @@ shared_examples_for 'Arnold' do
     end
 
   end
-end
-
-shared_examples_for 'Arnold used with ActiveRecord' do
-
-  before do
-    subject.send(:write_attribute, :name, 'Arnold')
-  end
 
   describe "#editable_attributes" do
 
-    it "should not contain id" do
-      subject.send(:editable_attributes).keys.should_not include('id')
+    let(:keys){ subject.send(:editable_attributes).keys }
+
+    it "should not contain an id" do
+      keys.should_not include('id')
+      keys.should_not include('_id')
     end
 
   end
 
   describe 'the tempfile' do
+    let(:keys){ YAML.load_file(subject.send(:tempfile)).keys }
 
-    it 'should not store the _id attribute' do
-      attributes = YAML.load_file(subject.send(:tempfile))
-      attributes.keys.should_not include('id')
-    end
-
-  end
-end
-
-shared_examples_for 'Arnold used with Mongoid' do
-
-  before do
-    subject.send(:write_attribute, :name, 'Arnold')
-  end
-
-  describe "#editable_attributes" do
-
-    it "should not contain _id" do
-      subject.send(:editable_attributes).keys.should_not include('_id')
-    end
-
-  end
-
-  describe 'the tempfile' do
-
-    it 'should not store the _id attribute' do
-      attributes = YAML.load_file(subject.send(:tempfile))
-      attributes.keys.should_not include('_id')
+    it 'should not store an id' do
+      keys.should_not include('id')
+      keys.should_not include('_id')
     end
 
   end

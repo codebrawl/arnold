@@ -11,10 +11,10 @@ ActiveRecord::Base.class_eval do
 end
 
 class ActiveRecordRow < ActiveRecord::Base
+  column :id
   column :name
 end
 
 describe ActiveRecordRow do
   it_should_behave_like 'Arnold'
-  it_should_behave_like 'Arnold used with ActiveRecord'
 end
