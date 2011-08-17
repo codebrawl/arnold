@@ -14,19 +14,19 @@ module Arnold
       if defined? Psych
         yaml = Psych::Visitors::YAMLTree.new {}
         yaml << data
-        set_pysch_style(yaml.tree).to_yaml
+        set_psych_style(yaml.tree).to_yaml
       else
         data.to_yaml
       end
     end
 
-    def self.set_pysch_style(node)
+    def self.set_psych_style(node)
       children = node.children.select(&:children)
 
       if children.empty?
         node.style = Psych::Nodes::Sequence::FLOW if node.children.select(&:children).empty?
       else
-        children.each {|child| set_pysch_style(child)}
+        children.each {|child| set_psych_style(child)}
       end
 
       node
