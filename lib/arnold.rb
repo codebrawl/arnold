@@ -33,27 +33,34 @@ module Arnold
     end
   end
 
-  def edit
-    YAML.load(change).each { |key, value| write_attribute(key, value) }
+  def edit(*fields)
+    YAML.load(change fields).each { |key, value| write_attribute(key, value) }
   end
 
-  def edit!
-    edit
+  def edit!(*fields)
+    edit(*fields)
     save!
   end
 
   private
 
-    def change
-      path = tempfile
+    def change(fields)
+      path = tempfile *fields
       system [editor, path].join(' ')
       File.read(path)
     end
 
-    def tempfile
+    def tempfile(*fields)
       tmp = Tempfile.new(id.to_s)
       File.open(tmp.path, 'w') do |file|
-        file.write YAMLizer.yamlize(editable_attributes)
+        wanted_attributes = editable_attributes
+        
+        unless fields.empty?
+          fields.map!(&:to_s)
+          wanted_attributes.reject!{ |k, v| not fields.include?(k) }
+        end
+        
+        file.write YAMLizer.yamlize(wanted_attributes)
       end
       tmp.close
       tmp.path

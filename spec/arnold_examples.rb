@@ -1,7 +1,15 @@
 shared_examples_for 'Arnold' do
 
+  let :arnold do
+    { :id => 1, :name => 'Arnold', :job => 'Boss', :rank => 1 }
+  end
+  
+  let :bob do
+    { :id => 9, :name => 'Bob', :job => 'Worker', :rank => 5 }
+  end
+
   before do
-    subject.send(:write_attribute, :name, 'Arnold')
+    arnold.each_pair{ |k, v| subject.send(:write_attribute, k, v) }
   end
 
   it 'should have Arnold included automatically' do
@@ -11,17 +19,28 @@ shared_examples_for 'Arnold' do
   describe '#edit' do
 
     it "should update the object's fields" do
-      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize({:name => 'Bob'}))
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(bob))
       subject.edit
-      subject.read_attribute(:name).should == 'Bob'
+      
+      bob.each_pair{ |k, v| subject.read_attribute(k).should == v }
+      subject.id.should_not be_nil
     end
 
+    it "should update just the given object's fields" do
+      to_change = bob.reject{ |k| k == :name }
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(to_change))
+
+      subject.edit(:job, "rank")
+      to_change.each_pair{ |k, v| subject.read_attribute(k).should == v }
+      subject.read_attribute(:name).should == arnold[:name]
+      subject.id.should_not be_nil
+    end
   end
 
   describe '#edit!' do
 
     it "should update and save the object" do
-      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize({:name => 'Bob'}))
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(bob))
       subject.expects(:edit)
       subject.expects(:save!)
       subject.edit!
@@ -30,12 +49,18 @@ shared_examples_for 'Arnold' do
   end
 
   describe '#tempfile' do
-
+        
     it 'should store the yaml-ized object into a tempfile' do
       attributes = YAML.load_file(subject.send(:tempfile))
-      attributes['name'].should == 'Arnold'
+      attributes['name'].should == arnold[:name]
     end
-
+    
+    it 'should store the yaml-ized object into a tempfile just with the selected attributes' do
+      attributes = YAML.load_file(subject.send(:tempfile, :job, "rank"))
+      attributes['job'].should == arnold[:job]
+      attributes['rank'].should == arnold[:rank]
+      attributes['name'].should be_nil
+    end
   end
 
   describe '#editor' do
