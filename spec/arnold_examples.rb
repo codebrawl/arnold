@@ -27,7 +27,7 @@ shared_examples_for 'Arnold' do
     end
 
     it "should update just the given object's fields" do
-      to_change = bob.reject{ |k| k == :name }
+      to_change = bob.reject{ |k, v| k == :name }
       subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(to_change))
 
       subject.edit(:job, "rank")
