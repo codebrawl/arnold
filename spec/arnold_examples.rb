@@ -3,7 +3,7 @@ shared_examples_for 'Arnold' do
   let :arnold do
     { :id => 1, :name => 'Arnold', :job => 'Boss', :rank => 1 }
   end
-  
+
   let :bob do
     { :id => 9, :name => 'Bob', :job => 'Worker', :rank => 5 }
   end
@@ -21,7 +21,7 @@ shared_examples_for 'Arnold' do
     it "should update the object's fields" do
       subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(bob))
       subject.edit
-      
+
       bob.each_pair{ |k, v| subject.read_attribute(k).should == v }
       subject.id.should_not be_nil
     end
@@ -49,12 +49,12 @@ shared_examples_for 'Arnold' do
   end
 
   describe '#tempfile' do
-        
+
     it 'should store the yaml-ized object into a tempfile' do
       attributes = YAML.load_file(subject.send(:tempfile))
       attributes['name'].should == arnold[:name]
     end
-    
+
     it 'should store the yaml-ized object into a tempfile just with the selected attributes' do
       attributes = YAML.load_file(subject.send(:tempfile, :job, "rank"))
       attributes['job'].should == arnold[:job]
@@ -67,6 +67,7 @@ shared_examples_for 'Arnold' do
 
     it "should return notepad by default on windows" do
       Arnold::Utils.stubs(:windows?).returns true
+      ENV.stubs(:[]).with('EDITOR').returns nil
       subject.send(:editor).should == 'notepad'
     end
 
