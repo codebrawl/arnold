@@ -98,6 +98,11 @@ shared_examples_for 'Arnold' do
       keys.should_not include('_id')
     end
 
+    it 'should not change the attributes array' do
+      subject.send(:editable_attributes)
+      subject.attributes.should include('id')
+    end
+
   end
 
   describe 'the tempfile' do

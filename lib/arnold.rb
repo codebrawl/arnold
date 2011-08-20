@@ -76,7 +76,7 @@ module Arnold
     end
 
     def editable_attributes
-      attributes.dup.delete_if{ |k, v| %w(_id id).include?(k) }
+      attributes.reject { |k, v| %w(_id id).include?(k) }
     end
 end
 
