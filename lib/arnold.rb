@@ -24,7 +24,7 @@ module Arnold
       children = node.children.select(&:children)
 
       if children.empty?
-        node.style = Psych::Nodes::Sequence::FLOW if node.children.select(&:children).empty?
+        node.style = Psych::Nodes::Sequence::FLOW
       else
         children.each {|child| set_psych_style(child)}
       end
@@ -54,12 +54,12 @@ module Arnold
       tmp = Tempfile.new(id.to_s)
       File.open(tmp.path, 'w') do |file|
         wanted_attributes = editable_attributes
-        
+
         unless fields.empty?
           fields.map!(&:to_s)
           wanted_attributes.reject!{ |k, v| not fields.include?(k) }
         end
-        
+
         file.write YAMLizer.yamlize(wanted_attributes)
       end
       tmp.close
