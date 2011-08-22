@@ -6,5 +6,6 @@ gemspec
 group :test do
   gem 'mongoid'
   gem 'activerecord'
+  gem 'data_mapper'
   gem 'sqlite3'
 end

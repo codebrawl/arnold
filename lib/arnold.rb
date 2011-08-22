@@ -97,3 +97,4 @@ end
 
 Mongoid::Document.send(:include, Arnold)  if defined? Mongoid::Document
 ActiveRecord::Base.send(:include, Arnold) if defined? ActiveRecord::Base
+DataMapper::Resource.send(:include, Arnold) if defined? DataMapper::Resource

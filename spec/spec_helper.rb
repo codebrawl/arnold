@@ -1,5 +1,6 @@
 require 'mongoid'
 require 'active_record'
+require 'data_mapper'
 require 'mocha'
 require 'arnold'
 require 'arnold_examples'
