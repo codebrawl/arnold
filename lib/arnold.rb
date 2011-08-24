@@ -7,6 +7,10 @@ module Arnold
     def self.windows?
       Config::CONFIG['host_os'] =~ /mswin|mingw/
     end
+
+    def self.stringify_keys(hash)
+      hash.inject({}) { |h, (key, val)| h[key.to_s] = val; h }
+    end
   end
 
   class YAMLizer
@@ -44,6 +48,15 @@ module Arnold
 
       data
     end
+  end
+
+  module DataMapperExtraMethods
+    def write_attribute(name, value); attribute_set(name, value); end
+    def read_attribute(name); attribute_get(name); end
+  end
+
+  def self.included(base)
+    base.send(:include, DataMapperExtraMethods) if defined?(DataMapper) && base == DataMapper::Resource
   end
 
   def edit(*fields)
@@ -89,7 +102,7 @@ module Arnold
     end
 
     def editable_attributes
-      attributes.reject do |key, value|
+      Utils.stringify_keys(attributes).reject do |key, value|
         %w{ _id id created_at updated_at }.include? key
       end
     end

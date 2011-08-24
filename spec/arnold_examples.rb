@@ -101,7 +101,7 @@ shared_examples_for 'Arnold' do
 
     it 'should not change the attributes array' do
       subject.send(:editable_attributes)
-      subject.attributes.should include('id')
+      Arnold::Utils.stringify_keys(subject.attributes).should include('id')
     end
 
   end
