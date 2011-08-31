@@ -9,30 +9,6 @@ module Arnold
     end
   end
 
-  class YAMLizer
-    def self.yamlize(data)
-      if defined? Psych
-        yaml = Psych::Visitors::YAMLTree.new {}
-        yaml << data
-        set_psych_style(yaml.tree).to_yaml
-      else
-        data.to_yaml
-      end
-    end
-
-    def self.set_psych_style(node)
-      children = node.children.select(&:children)
-
-      if children.empty?
-        node.style = Psych::Nodes::Sequence::FLOW
-      else
-        children.each {|child| set_psych_style(child)}
-      end
-
-      node
-    end
-  end
-
   def edit(*fields)
     YAML.load(change fields).each { |key, value| write_attribute(key, value) }
   end
@@ -60,7 +36,7 @@ module Arnold
           wanted_attributes.reject!{ |k, v| not fields.include?(k) }
         end
 
-        file.write YAMLizer.yamlize(wanted_attributes)
+        file.write wanted_attributes.to_yaml
       end
       tmp.close
       tmp.path
@@ -80,13 +56,5 @@ module Arnold
     end
 end
 
-module InlineYAML
-  def to_yaml_style
-    classes = map(&:class)
-    :inline unless classes.include?(Array) || classes.include?(Hash)
-  end
-end
-
-Array.send :include, InlineYAML
 Mongoid::Document.send(:include, Arnold)  if defined? Mongoid::Document
 ActiveRecord::Base.send(:include, Arnold) if defined? ActiveRecord::Base
