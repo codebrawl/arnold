@@ -5,5 +5,5 @@ gemspec
 
 group :test do
   gem 'mongoid'
-  gem 'activerecord'
+  gem 'activerecord', "= 3.0.10"
 end

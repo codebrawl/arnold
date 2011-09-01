@@ -19,7 +19,7 @@ shared_examples_for 'Arnold' do
   describe '#edit' do
 
     it "should update the object's fields" do
-      subject.stubs(:change).returns(bob.to_yaml)
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(bob))
       subject.edit
 
       bob.each_pair{ |k, v| subject.read_attribute(k).should == v }
@@ -28,7 +28,7 @@ shared_examples_for 'Arnold' do
 
     it "should update just the given object's fields" do
       to_change = bob.reject{ |k, v| k == :name }
-      subject.stubs(:change).returns(to_change.to_yaml)
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(to_change))
 
       subject.edit(:job, "rank")
       to_change.each_pair{ |k, v| subject.read_attribute(k).should == v }
@@ -40,7 +40,7 @@ shared_examples_for 'Arnold' do
   describe '#edit!' do
 
     it "should update and save the object" do
-      subject.stubs(:change).returns(bob.to_yaml)
+      subject.stubs(:change).returns(Arnold::YAMLizer.yamlize(bob))
       subject.expects(:edit)
       subject.expects(:save!)
       subject.edit!
