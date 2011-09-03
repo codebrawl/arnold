@@ -8,25 +8,25 @@ module Arnold
       Config::CONFIG['host_os'] =~ /mswin|mingw/
     end
   end
-  
+
   class YAMLizer
     def self.yamlize(data)
       swap_yamler{ injection(data).to_yaml }
     end
-    
+
     def self.deyamlize(data)
       swap_yamler{ YAML.load data }
     end
-    
+
     def self.swap_yamler(&block)
       old_yamler, YAML::ENGINE.yamler = YAML::ENGINE.yamler, 'syck' if defined?(YAML::ENGINE)
       yield
     ensure
       YAML::ENGINE.yamler = old_yamler if defined?(YAML::ENGINE)
     end
-    
+
     private
-    
+
     def self.injection(data)
       iter = case data
         when Hash then data.each_value
@@ -41,7 +41,7 @@ module Arnold
           def to_yaml_style; :inline; end
         end
       end
-      
+
       data
     end
   end
@@ -89,7 +89,7 @@ module Arnold
     end
 
     def editable_attributes
-      attributes.reject { |k, v| %w(_id id).include?(k) }
+      attributes.reject { |a| %w(_id id).include? a }
     end
 end
 
