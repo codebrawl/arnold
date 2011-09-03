@@ -89,8 +89,8 @@ module Arnold
     end
 
     def editable_attributes
-      attributes.reject do |attibute|
-        %w{ _id id created_at updated_at }.include? attibute
+      attributes.reject do |key, value|
+        %w{ _id id created_at updated_at }.include? key
       end
     end
 end
