@@ -1,7 +1,7 @@
 shared_examples_for 'Arnold' do
 
   let :arnold do
-    { :id => 1, :name => 'Arnold', :job => 'Boss', :rank => 1 }
+    { :id => 1, :name => 'Arnold', :job => 'Boss', :rank => 1, :created_at => Time.now, :updated_at => Time.now }
   end
 
   let :bob do
@@ -93,9 +93,10 @@ shared_examples_for 'Arnold' do
 
     let(:keys){ subject.send(:editable_attributes).keys }
 
-    it "should not contain an id" do
-      keys.should_not include('id')
-      keys.should_not include('_id')
+    it "should not contain any generated attributes" do
+      %w{ id _id created_at updated_at }.each do |attribute|
+        keys.should_not include attribute
+      end
     end
 
     it 'should not change the attributes array' do
