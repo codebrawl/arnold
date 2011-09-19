@@ -16,4 +16,6 @@ Alternatively, `edit!` saves the changes immediately to the database.
 ## Supported ORMs
 * ActiveRecord
 * Mongoid
+* DataMapper
+
 
